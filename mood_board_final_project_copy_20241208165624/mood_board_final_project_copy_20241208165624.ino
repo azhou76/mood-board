@@ -65,8 +65,7 @@ void setup() {
 
  // pinMode(7, INPUT);
 
- while (!Serial)
- ;
+ while (!Serial);
 
  // R_PFS->PORT[D6_PORT].PIN[D6_PIN].PmnPFS_b.PDR = 1;
  // R_PFS->PORT[D6_PORT].PIN[D6_PIN].PmnPFS_b.PDR = 1; // Set as output
@@ -133,7 +132,7 @@ void ourISR() {
 int x = matrix.width();
 int pass = 0;
 int filled = 0;
-int soundValues[20];
+int soundValues[10];
 
 
 void loop() {
@@ -146,14 +145,14 @@ void loop() {
 
  soundValue >>= 5; //bitshift operation
 
- if (soundValue > 250) {
- if (pass < 20) {
+ if (soundValue > 200) {
+ if (pass < 10) {
  soundValues[pass] = soundValue;
  pass += 1;
  } else {
  pass = 0;
  }
- if (filled < 20) {
+ if (filled < 10) {
  filled += 1;
  }
  }
@@ -173,7 +172,7 @@ void loop() {
 
  // soundValue = constrain(soundValue, 0, 1023); // Ensure value is within 0-1023
  Serial.println(soundValue);
- if (soundValue > 300) {
+ if (soundValue > 200) {
  Serial.println("Petting watchdog");
  petWDT(); // Reset the watchdog timer
  } 
@@ -198,14 +197,14 @@ void loop() {
  soundValue >>= 5; //bitshift operation 
  Serial.println(soundValue); //print the value of sound sensor
 
- if (soundValue > 250) {
- if (pass < 20) {
+ if (soundValue > 200) {
+ if (pass < 10) {
  soundValues[pass] = soundValue;
  pass += 1;
  } else {
  pass = 0;
  }
- if (filled < 20) {
+ if (filled < 10) {
  filled += 1;
  }
  }
@@ -215,7 +214,7 @@ void loop() {
  matrix.setBrightness(map(soundValue, 0, 600, 20, 80));
 
  Serial.println(soundValue);
- if (soundValue > 300) {
+ if (soundValue > 200) {
  Serial.println("Petting watchdog");
  petWDT(); // Reset the watchdog timer
  } 
@@ -256,7 +255,7 @@ void drawWave(int soundValue) {
 
  for (int y = height; y < 16; y++) {
  matrix.drawPixel(x, 16 - y - 1,
- matrix.Color(map(getAverage(soundValues, filled), 0, 600, 255, 127), map(getAverage(soundValues, filled), 0, 600, 255, 127), map(getAverage(soundValues, filled), 0, 600, 255, 127)) // Example: Fill with blue
+ matrix.Color(map(getAverage(soundValues, filled), 0, 600, 255, 0), map(getAverage(soundValues, filled), 0, 600, 255, 0), map(getAverage(soundValues, filled), 0, 600, 255, 0)) // Example: Fill with blue
  );
  }
  }
