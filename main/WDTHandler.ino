@@ -9,4 +9,5 @@ void WDTSetup() {
 
 void petWDT() {
     WDT.refresh();
+    lastPetTime = millis(); 
 }

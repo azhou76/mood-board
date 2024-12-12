@@ -5,34 +5,29 @@
 #include "Globals.h"
 #define CLAP_THRESHOLD 400
 
-int birdY = 4;        // Bird's vertical position
-int birdX = 16;        // Bird's fixed horizontal position
-int obstacleX = 2;    // Obstacle's horizontal position
-int obstacleGap = 3;  // Gap position in the obstacle
-int score = 0;        // Player's score
+int birdY = 4;       
+int birdX = 16;        
+int obstacleX = 2;  
+int obstacleGap = 3;  
+int score = 0; 
 bool isGameOver = false;
 unsigned long lastUpdateTime = 0;
 unsigned long flapTime = 0;
-int updateInterval = 500; // Game speed
-int gravity = 1;          // Bird falls every cycle
-
+int updateInterval = 500; 
+int gravity = 1; 
 
 void gameModeSetup() {
   currentMode = MODE_NORMAL;
 }
 
 // FLAPPY BIRD HELPER FUNCTIONS
-void birdFlap() { // Make the bird "flap" upwards
+void birdFlap() { // Make the bird flap
   birdY -= 1;
-  //Serial.println(birdY);
-  if (birdY < 0) {birdY = 0;} // Prevent going off the screen
+  if (birdY < 0) {birdY = 0;} 
 }
 
-// Render the game on the LED matrix
 void renderGame() {
   matrix.fillScreen(0);
-  // Draw the bird
-  Serial.println(birdY);
   matrix.drawPixel(birdX,birdY,matrix.Color(200,200,0));
 
   // Draw the obstacle
@@ -45,44 +40,33 @@ void renderGame() {
 }
 
 
-// Update game state
 void updateGame() {
-  // let it float to the middle
   if (birdX > 8){
     birdX -=1;
   }
- // Prevent going off the screen
 
-  // Move obstacle
-  //obstacleX += 1;
+  // move obstacle
   if (obstacleX > 15) {
-    obstacleX = 0;                // Reset obstacle position
-    obstacleGap = random(1, 12);   // Randomize gap position
-    score += 1;                   // Increment score
+    obstacleX = 0;                
+    obstacleGap = random(1, 12);  
+    score += 1;                 
   }
 
-   // Move obstacle (but stop if the bird cannot pass through)
   birdY += gravity;
   if (birdY > 15) {birdY = 15;}
   obstacleX += 1;
-  // if (canPassThrough()) {
-  //   obstacleX += 1;  // Move obstacle if the bird can pass
-  // }
 
-  // Check for collisions
+  // if collides, then game over
   if (birdX == obstacleX && (birdY < obstacleGap || birdY > obstacleGap + 1)) {
     isGameOver = true;
   }
 
-  // Update LED matrix
   renderGame();
 }
 
 bool canPassThrough(){
-  //its not within one of the bird
   //0 is. the right, 15 is the left
   //15 is down, 0 is up
-  //bird y is 7 and obstacle gap is 15
   if (birdX-obstacleX < 0){
     return true;
   }
@@ -92,57 +76,45 @@ bool canPassThrough(){
   if (abs(obstacleGap-birdY) == 0 || abs(birdY- obstacleGap+1) ==0){
     return true;
   }
-  //Serial.println("false");
   return false;
   //if its within one and one below or one above the mingap height and max gap height
 
 }
 
-// Reset the game variables
 void resetGame() {
-  int birdY = 4;        // Bird's vertical position
-  int birdX = 16;        // Bird's fixed horizontal position
-  int obstacleX = 2;    // Obstacle's horizontal position
-  int obstacleGap = 3;  // Gap position in the obstacle
-  int score = 0;        // Player's score
+  int birdY = 4;        
+  int birdX = 16;     
+  int obstacleX = 2;  
+  int obstacleGap = 3;
+  int score = 0;  
   bool isGameOver = false;
-  Serial.println('reset game');
   matrix.fillScreen(0);
 }
 
-// Display game over message
-void showGameOver() {
+void showGameOver() { // displays image to indicate game over
   matrix.fillScreen(0);
   matrix.setTextWrap(false);
-  matrix.setCursor(2, 5);  // Adjust the position of the text (you can modify y-coordinate to center it)
+  matrix.setCursor(2, 5);  
   matrix.setTextColor(colors[0]);
-  //matrix.setFont(&Tiny3x3a2pt7b);
-  //matrix.print();
   matrix.setRotation(1);
-  matrix.print(F(":("));// Fill the matrix to indicate "Game Over"
-  
+  matrix.print(F(":("));
   matrix.show();
-  //delay(1000);
   matrix.setRotation(4);
   resetGame();
-
 }
 
 
 
 void handleModeNormal(int soundValue) {
-    Serial.println("normal");
     matrix.setBrightness(10);
     soundValue = pollSound();
-    Serial.println(soundValue);
     if (soundValue > 200) {
       Serial.println("Petting watchdog");
       petWDT(); 
     }
 
-    // Check if 5 seconds have passed without petting the watchdog
+    // check if 5 seconds have passed without petting the watchdog
     if (millis() - lastPetTime > 5000) {
-      Serial.println("HELLO");
       Serial.println("Watchdog timeout! System will reset.");
 
       NVIC_SystemReset();
@@ -151,10 +123,8 @@ void handleModeNormal(int soundValue) {
 }
 
 void handleModeBright(int soundValue) {
-    Serial.println("bright");
     soundValue = pollSound();
     matrix.setBrightness(map(soundValue, 0, 600, 20, 80));
-      Serial.println(soundValue);
     if (soundValue > 200) {
       Serial.println("Petting watchdog");
       petWDT(); 
@@ -162,18 +132,14 @@ void handleModeBright(int soundValue) {
 
     // Check if 5 seconds have passed without petting the watchdog
     if (millis() - lastPetTime > 5000) {
-      Serial.println("HELLO");
-      Serial.println("Watchdog timeout! System will reset.");
-
+      Serial.println("Watchdog timed out. System will reset.");
       NVIC_SystemReset();
     }
     drawWave(soundValue, soundValues,filled);
 }
 
 void handleModeParty(int soundValue) {
-    Serial.println("PARTTY MODE");
     soundValue = pollSound();
-      Serial.println(soundValue);
     if (soundValue > 200) {
       Serial.println("Petting watchdog");
       petWDT(); 
@@ -181,7 +147,6 @@ void handleModeParty(int soundValue) {
 
     // Check if 5 seconds have passed without petting the watchdog
     if (millis() - lastPetTime > 5000) {
-      Serial.println("HELLO");
       Serial.println("Watchdog timeout! System will reset.");
 
       NVIC_SystemReset();
@@ -192,23 +157,16 @@ void handleModeParty(int soundValue) {
 }
 
 void handleModeGame() {
-    Serial.println("testing refactoring");
     if (isGameOver) {
       showGameOver();
-      Serial.println("gameover");
-      //break;
+      Serial.println("Game over.");
     }
 
     unsigned long currentTime = millis();
 
-    // Check for clap to make the bird flap
-    // int clapValue = analogRead(sound_sensor);
-    int clapValue = analogRead(A0);
-    Serial.println('clapval');
-    Serial.println(clapValue);
+    int clapValue = analogRead(A0); // check for clap
 
     if (clapValue > CLAP_THRESHOLD && (currentTime - flapTime > 50)) {
-      Serial.println("flapped");
       birdFlap();
       flapTime = currentTime;
       petWDT();
@@ -218,8 +176,6 @@ void handleModeGame() {
       petWDT();
       lastPetTime = millis();
     }
-
-    // Update game state at regular intervals
     if (currentTime - lastUpdateTime > updateInterval) {
       updateGame();
       lastUpdateTime = currentTime;
