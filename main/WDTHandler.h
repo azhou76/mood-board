@@ -3,5 +3,6 @@
 
 void WDTSetup();
 void petWDT();
+void wdtISR();
 
 #endif
