@@ -12,6 +12,4 @@ const uint16_t colors[] = {
     matrix.Color(0, 0, 255) 
 };
 
-unsigned long lastPetTime = 0;
-
 int filled = 0;

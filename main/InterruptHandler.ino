@@ -17,6 +17,7 @@ unsigned int getNextCPUINT(unsigned int start) {
 }
 
 const unsigned int CPU_INT_1 = getNextCPUINT(1);
+const unsigned int WDT_INT = getNextCPUINT(CPU_INT_1);
 
 void ourISR() {
   static int timesPushed = 0; 
@@ -39,6 +40,7 @@ void interruptSetup() {
   R_PFS->PORT[D2_PORT].PIN[D2_PIN].PmnPFS = (1 << R_PFS_PORT_PIN_PmnPFS_ISEL_Pos);
 
   // TODO: Trigger an interrupt when D2 goes from LOW to HIGH (prelab Q4.6)
+  R_ICU->IRQCR[CPU_INT_1] = 0b01;
   // Configure the ICU to connect the Port IRQ to the CPU (NVIC) IRQ (prelab Q4.7)
   R_ICU->IELSR[CPU_INT_1] = 0x002;
 

@@ -8,8 +8,6 @@ extern int soundValues[20];
 
 extern const uint16_t colors[];
 
-extern unsigned long lastPetTime;
-
 extern int filled;
 
 extern Adafruit_NeoMatrix matrix;

@@ -16,6 +16,8 @@ unsigned long flapTime = 0;
 int updateInterval = 500; 
 int gravity = 1; 
 
+unsigned long lastChangeColorTime= 0;
+
 void gameModeSetup() {
   currentMode = MODE_NORMAL;
 }
@@ -112,13 +114,6 @@ void handleModeNormal(int soundValue) {
       Serial.println("Petting watchdog");
       petWDT(); 
     }
-
-    // check if 5 seconds have passed without petting the watchdog
-    if (millis() - lastPetTime > 5000) {
-      Serial.println("Watchdog timeout! System will reset.");
-
-      NVIC_SystemReset();
-    }
     drawWave(soundValue, soundValues,filled);
 }
 
@@ -129,12 +124,6 @@ void handleModeBright(int soundValue) {
       Serial.println("Petting watchdog");
       petWDT(); 
     }
-
-    // Check if 5 seconds have passed without petting the watchdog
-    if (millis() - lastPetTime > 5000) {
-      Serial.println("Watchdog timed out. System will reset.");
-      NVIC_SystemReset();
-    }
     drawWave(soundValue, soundValues,filled);
 }
 
@@ -144,15 +133,7 @@ void handleModeParty(int soundValue) {
       Serial.println("Petting watchdog");
       petWDT(); 
     }
-
-    // Check if 5 seconds have passed without petting the watchdog
-    if (millis() - lastPetTime > 5000) {
-      Serial.println("Watchdog timeout! System will reset.");
-
-      NVIC_SystemReset();
-    }
     unsigned long currTime= millis();
-    unsigned long lastChangeColorTime= 0;
     drawWaveParty(soundValue, currTime, lastChangeColorTime);
 }
 
@@ -170,11 +151,9 @@ void handleModeGame() {
       birdFlap();
       flapTime = currentTime;
       petWDT();
-      lastPetTime = millis();
     }
     if (clapValue > CLAP_THRESHOLD){
       petWDT();
-      lastPetTime = millis();
     }
     if (currentTime - lastUpdateTime > updateInterval) {
       updateGame();
