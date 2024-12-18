@@ -1,25 +1,22 @@
 #include "GameModes.h"
 
-// Allows us to verify that our mapping conversions of amplitude values to 
+// checking if mapping conversions of amplitude values correctly
 void testCheckMapping() {
     Serial.println("Testing checkMapping function...");
     int passed = 0, failed = 0;
     int soundValues[10]; // Mock sound values array
     int filled = 10;     // Mock filled size for testing
 
-    // Generate random test cases
     for (int i = 0; i < 10; i++) {
         int soundValue = random(0, 1024); // Generate random sound values
 
-        // Fill mock soundValues array with random values
+       // fills in random values for the wave
         for (int j = 0; j < 10; j++) {
             soundValues[j] = random(0, 1024);
         }
 
-        // Test the function
         bool result = checkMapping(soundValue, soundValues, filled);
 
-        // Expected output conditions
         int newHeight = map(soundValue, 50, 600, 0, 16);
         int newRed = map(soundValue, 0, 600, 0, 255);
         int newGreen = map(soundValue, 0, 600, 0, 127);
@@ -32,7 +29,6 @@ void testCheckMapping() {
                          newBlue >= 0 && newBlue < 255 &&
                          newBg >= 0 && newBg < 255);
 
-        // Validate
         if (result == expected) {
             passed++;
         } else {
@@ -48,28 +44,26 @@ void testCheckMapping() {
     Serial.println(failed);
 }
 
-// Allows us to test that our board's animation-shifting logic is correct when using randomly generated heights for new sound values
+// testing if board is shifting wave to the right given randomly generated heights 
 void testDrawWave() {
     Serial.println("Testing drawWave function...");
     int mockWave[16]; // Mock wave array
     uint32_t outputMatrix[16][16]; // Resultant matrix
 
-    // Initialize the mockWave array with random values
+    // initialized with random values
     for (int i = 0; i < 16; i++) {
-        mockWave[i] = random(0, 16); // Random heights for each column
+        mockWave[i] = random(0, 16); 
     }
 
-    // Call drawWave with the mock data
     int newHeight = random(0, 16);
     mockDrawWave(mockWave, newHeight, outputMatrix);
 
-    // Validate the outputMatrix
     bool passed = true;
 
     for (int x = 0; x < 16; x++) {
         int height = mockWave[x];
 
-        // Check for correct pixel placement
+        //check correct pixel placement
         for (int y = 0; y < height; y++) {
             if (outputMatrix[16 - y - 1][x] != 1) {
                 Serial.print("Error: Pixel at (");
@@ -81,7 +75,7 @@ void testDrawWave() {
             }
         }
 
-        // Check for correct background placement
+        // checking correct background placement
         for (int y = height; y < 16; y++) {
             if (outputMatrix[16 - y - 1][x] != 0) {
                 Serial.print("Error: Pixel at (");
@@ -94,7 +88,6 @@ void testDrawWave() {
         }
     }
 
-    // Display test result
     if (passed) {
         Serial.println("drawWave test passed!");
     } else {
@@ -102,18 +95,17 @@ void testDrawWave() {
     }
 }
 
-// Allows us to test if our LED board is drawing correctly using randomly generated sound values
+// testing if LED board is drawn correctly using random sound values
 void testIntegratedDrawWave() {
     Serial.println("Integration testing draw wave LED board part");
     int passed = 0, failed = 0;
     int soundValues[10]; // Mock sound values array
     int filled = 10;     // Mock filled size for testing
 
-    // Generate random test cases
+    // fills in random values for the wave
     for (int i = 0; i < 20; i++) {
         int soundValue = random(0, 1024); // Generate random sound values
-
-        // Fill mock soundValues array with random values
+        
         for (int j = 0; j < 10; j++) {
             soundValues[j] = random(0, 1024);
         }
@@ -125,29 +117,27 @@ void testIntegratedDrawWave() {
 
 }
 
-// Allows us to test if our LED board is drawing correctly using randomly generated sound values
+// testing to see if mode changes correctly based on ISR
 void testIntegratedModeChange() {
     Serial.println("Starting mode change test!");
 
-    // Simulate the first ISR call
+    // first ISR call
     ourISR();
     bool firstTest = (currentMode == 1);
     Serial.println(currentMode);
 
-    // Simulate the second ISR call
+    // second ISR call
     ourISR();
     bool secondTest = (currentMode == 2);
     Serial.println(currentMode);
 
-    // Simulate the third ISR call
+    // third ISR call
     ourISR();
     bool thirdTest = (currentMode == 3);
     Serial.println(currentMode);
 
-    // Combine test results
     bool passed = firstTest && secondTest && thirdTest;
 
-    // Display test result
     if (passed) {
         Serial.println("Mode change test passed!");
     } else {
@@ -165,47 +155,44 @@ void testIntegratedModeChange() {
     }
 }
 
+// testing to see if background color changes correctly
 void testBackgroundColorChange() {
-  // Simulated variables for the test
   unsigned long lastChangeColorTime = 0;
   unsigned long simulatedMillis = 0; // Simulated "current" time
 
-  // Variables to capture background colors
   int redBefore, greenBefore, blueBefore;
   int redAfter, greenAfter, blueAfter;
 
-  // Mock variables for the function
-  int soundValue = 512; // Arbitrary mid-range sound value
+  int soundValue = 512; 
 
-  // Initial call to get initial background color
+  // call to change initial background color
   drawWaveParty(soundValue, simulatedMillis, lastChangeColorTime);
 
-  // Capture initial color values
-  redBefore = random(0, 200); // Replace this logic with captured RGB values
+  // initial color values
+  redBefore = random(0, 200); 
   greenBefore = random(0, 200);
   blueBefore = random(0, 200);
 
-  // Simulate time progression (less than 2 seconds)
+  // time progression (less than 2 seconds)
   simulatedMillis += 1500; // 1.5 seconds
   drawWaveParty(soundValue, simulatedMillis, lastChangeColorTime);
 
-  // Ensure the color has not changed yet
-  redAfter = random(0, 200); // Replace with the second RGB capture
+  // color has not changed
+  redAfter = random(0, 200); 
   greenAfter = random(0, 200);
   blueAfter = random(0, 200);
   bool colorDidNotChange = (redBefore == redAfter && greenBefore == greenAfter && blueBefore == blueAfter);
 
-  // Simulate time progression to 2 seconds
-  simulatedMillis += 1000; // Additional 1 second (now 2.5 seconds total)
+  // time progression (more than 2 seconds)
+  simulatedMillis += 1000; // additional 1 second (now 2.5 seconds)
   drawWaveParty(soundValue, simulatedMillis, lastChangeColorTime);
 
-  // Ensure the color has changed
+  // check is color has changed
   redAfter = random(0, 200); // Replace with the updated RGB capture
   greenAfter = random(0, 200);
   blueAfter = random(0, 200);
   bool colorDidChange = !(redBefore == redAfter && greenBefore == greenAfter && blueBefore == blueAfter);
 
-  // Display test results
   Serial.println("Running Background Color Change Test...");
   if (colorDidNotChange && colorDidChange) {
     Serial.println("Test passed: Background color changes every 2 seconds.");
