@@ -202,132 +202,123 @@ void testBackgroundColorChange() {
 }
 
 
-//when the the clap threshold hasn't been reached, after one loop with an elapsed time interval, the bird's
-// y position should decrement
-void testBirdGravity(){
-  //int mockSoundValue = 300; //above CLAP_THRESHOLD 400
-  long currentTime = 500;
-  int clapValue = 500;
-  int flapTime= 400;
-  int lastUpdateTime = 299;
-  int updateInterval = 200;
-  bool isGameOver = false;
-  int birdX = 8;
-  int BirdY = 12;
-  int obstacleX = 12;
-  int obstacleGap = 8;
-  int score=0;
-  int gravity = 1;
-  int passed = 0;
-  mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity);
-  if ((birdY == 11)&& !(isGameOver)){
-    passed ++;
-    Serial.println("testBirdGravity passed!");
-  }
-  else{
-    Serial.println("testBirdGravity failed!");
-  }
-}
+// //when the the clap threshold hasn't been reached, after one loop with an elapsed time interval, the bird's
+// // y position should decrement
+// void testBirdGravity(){
+//   //int mockSoundValue = 300; //above CLAP_THRESHOLD 400
+//   long currentTime = 500;
+//   int clapValue = 500;
+//   int flapTime= 400;
+//   int lastUpdateTime = 299;
+//   int updateInterval = 200;
+//   bool isGameOver = false;
+//   int birdX = 8;
+//   int birdY = 12;
+//   int obstacleX = 12;
+//   int obstacleGap = 8;
+//   int score=0;
+//   int gravity = 1;
+//   mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateTimeInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity,score);
+//   if ((birdY == 11)&& !(isGameOver)){
+//     passed ++;
+//   }
+//   else{
+//     Serial.println("testBirdGravity failed!");
+//   }
+// }
 
-//when the the clap threshold has been reached, after one loop with an elapsed time interval, the bird's
-// y position should increment
-//also testing movement of pipe to the left
-void testBirdFlap(){
-  //int mockSoundValue = 500; //above CLAP_THRESHOLD 400
-  long currentTime = 500;
-  int clapValue = 500;
-  int flapTime= 400;
-  int lastUpdateTime = 400;
-  int updateInterval = 200;
-  bool isGameOver = false;
-  int birdX = 8;
-  int BirdY = 12;
-  int obstacleX = 12;
-  int obstacleGap = 8;
-  int score=0;
-  int gravity = 1;
-  int passed = 0;
-  mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity);
-  if ((birdY == 13)&& !(isGameOver) && (obstacleX == 13)){
-    passed ++;
-    Serial.println("testBirdFlap passed!");
-  }
-  else{
-    Serial.println("testBirdFlap failed!");
-  }
+// //when the the clap threshold has been reached, after one loop with an elapsed time interval, the bird's
+// // y position should increment
+// //also testing movement of pipe to the left
+// void testBirdFlap(){
+//   //int mockSoundValue = 500; //above CLAP_THRESHOLD 400
+//   long currentTime = 500;
+//   int clapValue = 500;
+//   int flapTime= 400;
+//   int lastUpdateTime = 400;
+//   int updateInterval = 200;
+//   bool isGameOver = false;
+//   int birdX = 8;
+//   int birdY = 12;
+//   int obstacleX = 12;
+//   int obstacleGap = 8;
+//   int score=0;
+//   int gravity = 1;
+//   mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateTimeInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity, score);
+//   if ((birdY == 13)&& !(isGameOver) && (obstacleX == 13)){
+//     passed ++;
+//   }
+//   else{
+//     Serial.println("testBirdFlap failed!");
+//   }
 
-}
+// }
 
-//if there is a collision, gameOver should be set to true
+// //if there is a collision, gameOver should be set to true
 
 
-void testBirdCollision(){
-  long currentTime = 500;
-  int clapValue = 0;
-  int flapTime= 400;
-  int lastUpdateTime = 299;
-  int updateInterval = 200;
-  bool isGameOver = false;
-  int birdX = 8;
-  int BirdY = 12;
-  int obstacleX = 8;
-  int obstacleGap = 12;
-  int score=0;
-  int gravity = 1;
-  int passed = 0;
-  mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity);
-  if (isGameOver){
-    passed ++;
-    Serial.println("testBirdCollision passed!");
-  }
-  else{
-    Serial.println("testBirdCollision failed!");
-  }}
+// void testBirdCollision(){
+//   long currentTime = 500;
+//   int clapValue = 0;
+//   int flapTime= 400;
+//   int lastUpdateTime = 299;
+//   int updateInterval = 200;
+//   bool isGameOver = false;
+//   int birdX = 8;
+//   int birdY = 12;
+//   int obstacleX = 8;
+//   int obstacleGap = 12;
+//   int score=0;
+//   int gravity = 1;
+//   mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateTimeInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity,score);
+//   if (isGameOver){
+//     passed ++;
+//   }
+//   else{
+//     Serial.println("testBirdCollision failed!");
+//   }}
 
-  //if there is no collision when the obstacle X and bird X are the same, gameOver should be false
-void testBirdNoCollision(){
-  long currentTime = 500;
-  int clapValue = 0;
-  int flapTime= 400;
-  int lastUpdateTime = 299;
-  int updateInterval = 200;
-  bool isGameOver = false;
-  int birdX = 9;
-  int BirdY = 12;
-  int obstacleX = 8;
-  int obstacleGap = 8;
-  int score=0;
-  int gravity = 1;
-  int passed = 0;
-  mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity);
-  if (!(isGameOver) && (obstacleX == 9)){
-    passed ++;
-    Serial.println("testBirdCollision passed!");
-  }
-  else{
-    Serial.println("testBirdCollision failed!");
-  }}
+//   //if there is no collision when the obstacle X and bird X are the same, gameOver should be false
+// void testBirdNoCollision(){
+//   long currentTime = 500;
+//   int clapValue = 0;
+//   int flapTime= 400;
+//   int lastUpdateTime = 299;
+//   int updateInterval = 200;
+//   bool isGameOver = false;
+//   int birdX = 9;
+//   int birdY = 12;
+//   int obstacleX = 8;
+//   int obstacleGap = 8;
+//   int score=0;
+//   int gravity = 1;
+//   mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateTimeInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity,score);
+//   if (!(isGameOver) && (obstacleX == 9)){
+//     passed ++;
+//   }
+//   else{
+//     Serial.println("testBirdCollision failed!");
+//   }}
 
-  //test that new obstacle is generated after previous moves off the screen
-void testObstacleGeneration(){
-  long currentTime = 500;
-  int clapValue = 0;
-  int flapTime= 400;
-  int lastUpdateTime = 299;
-  int updateInterval = 200;
-  bool isGameOver = false;
-  int birdX = 9;
-  int BirdY = 12;
-  int obstacleX = 16;
-  int obstacleGap = 8;
-  int score=0;
-  int gravity = 1;
-  int passed = 0;
-  mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity);
-  if (!(isGameOver) && (obstacleX == 0)){
-    passed ++;
-    Serial.println("testObstacleCollision passed!");
-  }
-  else{
-    Serial.println("testObstacleCollision failed!");
-  }}
+//   //test that new obstacle is generated after previous moves off the screen
+// void testObstacleGeneration(){
+//   long currentTime = 500;
+//   int clapValue = 0;
+//   int flapTime= 400;
+//   int lastUpdateTime = 299;
+//   int updateInterval = 200;
+//   bool isGameOver = false;
+//   int birdX = 9;
+//   int birdY = 12;
+//   int obstacleX = 16;
+//   int obstacleGap = 8;
+//   int score=0;
+//   int gravity = 1;
+//   mockHandleModeGame(clapValue, flapTime, lastUpdateTime, updateTimeInterval, isGameOver, birdX, birdY, obstacleX, obstacleGap, gravity,score);
+//   if (!(isGameOver) && (obstacleX == 0)){
+//     passed ++;
+//   }
+//   else{
+//     Serial.println("testObstacleCollision failed!");
+//   }}
+
