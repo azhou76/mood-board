@@ -4,5 +4,9 @@
 void testCheckMapping(); 
 void testDrawWave();
 void testIntegratedDrawWave();
+void testBirdGravity();
+void testBirdFlap();
+void testBirdCollision();
+void testBirdNoCollision();
 
 #endif
