@@ -161,12 +161,12 @@ void handleModeGame() {
     }
 }
 
-void mockHandleModeGame(long currentTime, int clapValue,int flapTime,
-                        int lastUpdateTime, int updateInterval, bool &isGameOver,
-                        int &birdX, int &BirdY,int &obstacleX, int obstacleGap){
+void mockHandleModeGame(long &currentTime, int &clapValue,int &flapTime,
+                        int &lastUpdateTime, int &updateInterval, bool &isGameOver,
+                        int &birdX, int &birdY, int &obstacleX, int &obstacleGap,int &gravity,int &score){
   if (isGameOver) {
-      return;
       Serial.println("Game over.");
+      return;
     } else {
       if (clapValue > CLAP_THRESHOLD && (currentTime - flapTime > 50)) {
         birdFlap();
@@ -178,20 +178,25 @@ void mockHandleModeGame(long currentTime, int clapValue,int flapTime,
         lastUpdateTime = currentTime;
       }
     }
+
 }
-void mockUpdateGame(int birdX, int obstacleX, int obstacleGap, int score, int gravity, int birdY, int isGameOver) {
+
+void mockUpdateGame(int &birdX, int &obstacleX, int &obstacleGap, int &score, int &gravity, int &birdY, int &isGameOver) {
   if (birdX > 8){
     birdX -=1;
   }
+
   // move obstacle
   if (obstacleX > 15) {
     obstacleX = 0;                
     obstacleGap = random(1, 12);  
     score += 1;                 
   }
+
   birdY += gravity;
   if (birdY > 15) {birdY = 15;}
   obstacleX += 1;
+
   // if collides, then game over
   if (birdX == obstacleX && (birdY < obstacleGap || birdY > obstacleGap + 1)) {
     isGameOver = true;
