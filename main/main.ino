@@ -33,16 +33,16 @@ void loop() {
     int soundValue = pollSound();
     switch (currentMode) {
         case MODE_NORMAL:
-            handleModeNormal(soundValue);
+            handleModeNormal(soundValue); // transition 5-1: GAME_MODE -> NORMAL_MODE 
             break;
         case MODE_BRIGHT:
-            handleModeBright(soundValue);
+            handleModeBright(soundValue); // transition 1-2, NORMAL_MODE -> BRIGHT_MODE
             break;
         case MODE_PARTY:
-            handleModeParty(soundValue);
+            handleModeParty(soundValue); // transition 2-3, BRIGHT_MODE -> PARTY_MODE
             break;
         case MODE_GAME:
-            handleModeGame();
+            handleModeGame(); // transition 3-4, PARTY_MODE -> GAME_MODE
             break;
         default:
             break;
