@@ -160,3 +160,44 @@ void handleModeGame() {
       }
     }
 }
+
+void mockHandleModeGame(long currentTime, int clapValue,int flapTime,
+                        int lastUpdateTime, int updateInterval, bool isGameOver,
+                        int birdX, int BirdY,int obstacleX, int obstacleGap){
+  if (isGameOver) {
+      return;
+      Serial.println("Game over.");
+    } else {
+      if (mockClapValue > CLAP_THRESHOLD && (currentTime - flapTime > 50)) {
+        birdFlap();
+        flapTime = currentTime;
+       // petWDT();
+      }
+      if (currentTime - lastUpdateTime > updateInterval) {
+        mockUpdateGame(birdX, obstacleX, obstacleGap, score, gravity, birdY, isGameOver);
+        lastUpdateTime = currentTime;
+      }
+    }
+
+}
+
+void mockUpdateGame(int birdX, int obstacleX, int obstacleGap, int score, int gravity, int birdY, int isGameOver) {
+  if (birdX > 8){
+    birdX -=1;
+  }
+
+  // move obstacle
+  if (obstacleX > 15) {
+    obstacleX = 0;                
+    obstacleGap = random(1, 12);  
+    score += 1;                 
+  }
+
+  birdY += gravity;
+  if (birdY > 15) {birdY = 15;}
+  obstacleX += 1;
+
+  // if collides, then game over
+  if (birdX == obstacleX && (birdY < obstacleGap || birdY > obstacleGap + 1)) {
+    isGameOver = true;
+  }
