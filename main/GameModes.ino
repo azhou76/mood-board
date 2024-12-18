@@ -72,7 +72,7 @@ bool canPassThrough(){
   if (birdX-obstacleX < 0){
     return true;
   }
-  if (obstacleX-birdX< -1){ //greater than one away or the bird is already to the right of the screen
+  if (obstacleX-birdX<= -1){ //greater than one away or the bird is already to the right of the screen
     return true;
   }
   if (abs(obstacleGap-birdY) == 0 || abs(birdY- obstacleGap+1) ==0){
@@ -141,22 +141,22 @@ void handleModeGame() {
     if (isGameOver) {
       showGameOver();
       Serial.println("Game over.");
-    }
+    } else {
+      unsigned long currentTime = millis();
 
-    unsigned long currentTime = millis();
+      int clapValue = analogRead(A0); // check for clap
 
-    int clapValue = analogRead(A0); // check for clap
-
-    if (clapValue > CLAP_THRESHOLD && (currentTime - flapTime > 50)) {
-      birdFlap();
-      flapTime = currentTime;
-      petWDT();
-    }
-    if (clapValue > CLAP_THRESHOLD){
-      petWDT();
-    }
-    if (currentTime - lastUpdateTime > updateInterval) {
-      updateGame();
-      lastUpdateTime = currentTime;
+      if (clapValue > CLAP_THRESHOLD && (currentTime - flapTime > 50)) {
+        birdFlap();
+        flapTime = currentTime;
+        petWDT();
+      }
+      else if (clapValue > CLAP_THRESHOLD){
+        petWDT();
+      }
+      if (currentTime - lastUpdateTime > updateInterval) {
+        updateGame();
+        lastUpdateTime = currentTime;
+      }
     }
 }
